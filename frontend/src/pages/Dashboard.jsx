@@ -14,6 +14,7 @@ const Dashboard = () => {
     totalAttendees: 0,
     upcomingEvents: 0
   });
+  const [activeTab, setActiveTab] = useState('events');
 
   useEffect(() => {
     if (!token) {
@@ -81,14 +82,12 @@ const Dashboard = () => {
 
   if (!token) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Please log in to view your dashboard
-          </h2>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 bg-[length:40px_40px] bg-grid-pattern">
+        <div className="text-center bg-white bg-opacity-90 p-8 rounded-xl shadow-lg border-2 border-dashed border-pink-300">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 font-handwritten">Please log in to view your dashboard</h2>
           <button
             onClick={() => navigate('/login')}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-gradient-to-r from-pink-400 to-pink-500 text-white px-6 py-2 rounded-full font-handwritten text-lg hover:shadow-lg hover:glow-pink transition-all"
           >
             Go to Login
           </button>
@@ -99,213 +98,316 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 bg-[length:40px_40px] bg-grid-pattern">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-pink-500"></div>
       </div>
     );
   }
 
+  // Function to get a random pastel color for cards
+  const getRandomPastelColor = () => {
+    const colors = [
+      'bg-pink-100 border-pink-200',
+      'bg-blue-100 border-blue-200',
+      'bg-green-100 border-green-200',
+      'bg-purple-100 border-purple-200',
+      'bg-yellow-100 border-yellow-200'
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">My Dashboard</h1>
-        <p className="text-gray-600">Manage your events and track performance</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 bg-[length:40px_40px] bg-grid-pattern py-8 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold font-handwritten bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent glow-text mb-2">
+            My Dashboard
+          </h1>
+          <p className="text-gray-600 font-handwritten text-lg">Manage your events and track performance</p>
+        </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
+        {/* Sticky Note Tabs */}
+        <div className="flex flex-wrap gap-4 mb-8 justify-center">
+          <button
+            onClick={() => setActiveTab('events')}
+            className={`px-6 py-3 rounded-full font-handwritten text-lg transition-all transform hover:-translate-y-1 ${
+              activeTab === 'events' 
+                ? 'bg-pink-300 text-gray-800 shadow-lg' 
+                : 'bg-white text-gray-600 shadow-md hover:shadow-lg'
+            }`}
+          >
+            📋 My Events
+          </button>
+          <button
+            onClick={() => setActiveTab('stats')}
+            className={`px-6 py-3 rounded-full font-handwritten text-lg transition-all transform hover:-translate-y-1 ${
+              activeTab === 'stats' 
+                ? 'bg-blue-300 text-gray-800 shadow-lg' 
+                : 'bg-white text-gray-600 shadow-md hover:shadow-lg'
+            }`}
+          >
+            📊 Statistics
+          </button>
+          <button
+            onClick={() => setActiveTab('create')}
+            className={`px-6 py-3 rounded-full font-handwritten text-lg transition-all transform hover:-translate-y-1 ${
+              activeTab === 'create' 
+                ? 'bg-green-300 text-gray-800 shadow-lg' 
+                : 'bg-white text-gray-600 shadow-md hover:shadow-lg'
+            }`}
+          >
+            ✨ Create New
+          </button>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-dashed border-pink-300 transform rotate-1">
+            <div className="flex items-center">
+              <div className="p-3 bg-pink-100 rounded-xl text-2xl">
+                📅
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600 font-handwritten">Total Events</p>
+                <p className="text-2xl font-bold text-gray-900 font-handwritten">{stats.totalEvents}</p>
+              </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Events</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.totalEvents}</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-dashed border-blue-300 transform -rotate-1">
+            <div className="flex items-center">
+              <div className="p-3 bg-blue-100 rounded-xl text-2xl">
+                👥
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600 font-handwritten">Total Attendees</p>
+                <p className="text-2xl font-bold text-gray-900 font-handwritten">{stats.totalAttendees}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-dashed border-green-300 transform rotate-2">
+            <div className="flex items-center">
+              <div className="p-3 bg-green-100 rounded-xl text-2xl">
+                ⏰
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600 font-handwritten">Upcoming Events</p>
+                <p className="text-2xl font-bold text-gray-900 font-handwritten">{stats.upcomingEvents}</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-              </svg>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Attendees</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.totalAttendees}</p>
-            </div>
-          </div>
+        {/* Create Event Button */}
+        <div className="mb-8 text-center">
+          <Link
+            to="/create-event"
+            className="inline-flex items-center bg-gradient-to-r from-pink-400 to-purple-400 text-white px-8 py-4 rounded-full font-handwritten text-xl hover:shadow-lg hover:glow-pink transition-all transform hover:-translate-y-1"
+          >
+            <span className="mr-2">✨</span>
+            Create New Event
+          </Link>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex items-center">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-              </svg>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Upcoming Events</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.upcomingEvents}</p>
-            </div>
+        {/* Events List */}
+        <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-lg border-2 border-dashed border-gray-300 p-6">
+          <div className="mb-6">
+            <h3 className="text-2xl font-medium text-gray-900 font-handwritten bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+              Your Events
+            </h3>
           </div>
-        </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="mb-6 flex flex-col sm:flex-row gap-4">
-        <Link
-          to="/create-event"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium inline-flex items-center justify-center"
-        >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
-          </svg>
-          Create New Event
-        </Link>
-      </div>
-
-      {/* Events List */}
-      <div className="bg-white shadow rounded-lg">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Your Events</h3>
-        </div>
-
-        {myEvents.length === 0 ? (
-          <div className="px-6 py-12 text-center">
-            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No events</h3>
-            <p className="mt-1 text-sm text-gray-500">Get started by creating your first event.</p>
-            <div className="mt-6">
-              <Link
-                to="/create-event"
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Create Event
-              </Link>
+          {myEvents.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-4xl mb-4">📝</div>
+              <h3 className="text-xl font-medium text-gray-900 font-handwritten">No events yet</h3>
+              <p className="mt-2 text-gray-600 font-handwritten">Get started by creating your first event!</p>
+              <div className="mt-6">
+                <Link
+                  to="/create-event"
+                  className="inline-flex items-center bg-gradient-to-r from-pink-400 to-pink-500 text-white px-6 py-3 rounded-full font-handwritten text-lg hover:shadow-lg hover:glow-pink transition-all"
+                >
+                  <span className="mr-2">✨</span>
+                  Create Your First Event
+                </Link>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Event
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date & Time
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Attendees
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {myEvents.map((event) => {
-                    const eventDate = new Date(event.date);
-                    const now = new Date();
-                    const isUpcoming = eventDate >= now;
-                    const isPast = eventDate < now;
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {myEvents.map((event) => {
+                const eventDate = new Date(event.date);
+                const now = new Date();
+                const isUpcoming = eventDate >= now;
+                const isPast = eventDate < now;
+                const cardColor = getRandomPastelColor();
+                
+                return (
+                  <div key={event._id} className={`relative rounded-lg shadow-md border-2 ${cardColor} transition-all duration-300 hover:-translate-y-1 hover:rotate-1 hover:shadow-xl`}>
+                    {/* Paperclip decoration */}
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 text-gray-400 text-2xl">📎</div>
                     
-                    return (
-                      <tr key={event._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center">
-                            <div className="flex-shrink-0 h-10 w-10">
-                              {event.banner ? (
-                                <img
-                                  className="h-10 w-10 rounded-lg object-cover"
-                                  src={`${API_BASE_URL}${event.banner}`}
-                                  alt={event.title}
-                                />
-                              ) : (
-                                <div className="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center">
-                                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                  </svg>
-                                </div>
-                              )}
-                            </div>
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">{event.title}</div>
-                              <div className="text-sm text-gray-500">{event.category}</div>
-                            </div>
+                    <div className="h-40 bg-gray-100 flex items-center justify-center overflow-hidden rounded-t-lg">
+                      {event.banner ? (
+                        <img
+                          src={`${API_BASE_URL}${event.banner}`}
+                          alt={event.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-200 to-purple-200 text-white">
+                          <div className="text-4xl">🎉</div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="p-5">
+                      <h3 className="text-lg font-bold text-gray-800 mb-2 font-handwritten">
+                        {event.title}
+                      </h3>
+                      
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center text-sm text-gray-500 font-handwritten">
+                          <span className="mr-2">📅</span>
+                          {eventDate.toLocaleDateString()} {event.time && `at ${event.time}`}
+                        </div>
+                        
+                        {event.location && (
+                          <div className="flex items-center text-sm text-gray-500 font-handwritten">
+                            <span className="mr-2">📍</span>
+                            {event.location}
                           </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            {eventDate.toLocaleDateString()}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {event.time || 'No time specified'}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            {event.attendees.length} registered
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            isUpcoming 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-gray-100 text-gray-800'
-                          }`}>
-                            {isUpcoming ? 'Upcoming' : 'Past'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <div className="flex justify-end space-x-2">
-                            <Link
-                              to={`/event/${event._id}`}
-                              className="text-blue-600 hover:text-blue-900"
-                            >
-                              View
-                            </Link>
-                            <Link
-                              to={`/edit-event/${event._id}`}
-                              className="text-indigo-600 hover:text-indigo-900"
-                            >
-                              Edit
-                            </Link>
-                            <button
-                              onClick={() => handleDeleteEvent(event._id, event.title)}
-                              className="text-red-600 hover:text-red-900"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                        )}
+                        
+                        <div className="flex items-center text-sm text-gray-500 font-handwritten">
+                          <span className="mr-2">👥</span>
+                          {event.attendees.length} registered
+                        </div>
+                        
+                        <div className="flex items-center text-sm text-gray-500 font-handwritten">
+                          <span className="mr-2">🏷️</span>
+                          {event.category || 'No category'}
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center">
+                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full font-handwritten ${
+                          isUpcoming 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {isUpcoming ? 'Upcoming' : 'Past'}
+                        </span>
+                        
+                        <div className="flex space-x-2">
+                          <Link
+                            to={`/event/${event._id}`}
+                            className="text-blue-500 hover:text-blue-700 text-lg transition-transform hover:scale-110"
+                            title="View Event"
+                          >
+                            👁️
+                          </Link>
+                          <Link
+                            to={`/edit-event/${event._id}`}
+                            className="text-yellow-500 hover:text-yellow-700 text-lg transition-transform hover:scale-110"
+                            title="Edit Event"
+                          >
+                            ✏️
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteEvent(event._id, event.title)}
+                            className="text-red-500 hover:text-red-700 text-lg transition-transform hover:scale-110"
+                            title="Delete Event"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Doodle Chart Section */}
+        {myEvents.length > 0 && (
+          <div className="mt-8 bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-lg border-2 border-dashed border-gray-300 p-6">
+            <h3 className="text-2xl font-medium text-gray-900 font-handwritten bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent mb-4">
+              Event Statistics
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-4 border-2 border-dashed border-pink-300 rounded-lg">
+                <h4 className="font-handwritten text-lg mb-3">Events by Status</h4>
+                <div className="flex items-center justify-center h-40 relative">
+                  {/* Hand-drawn pie chart */}
+                  <div className="relative w-32 h-32">
+                    <div className="absolute inset-0 rounded-full border-4 border-pink-400" 
+                         style={{ clipPath: `inset(0 0 0 ${50 - (stats.upcomingEvents / stats.totalEvents * 50)}%)` }}>
+                    </div>
+                    <div className="absolute inset-0 rounded-full border-4 border-gray-300" 
+                         style={{ clipPath: `inset(0 ${50 - (stats.upcomingEvents / stats.totalEvents * 50)}% 0 0)` }}>
+                    </div>
+                  </div>
+                  <div className="ml-6">
+                    <div className="flex items-center mb-2">
+                      <div className="w-4 h-4 bg-pink-400 rounded mr-2"></div>
+                      <span className="font-handwritten">Upcoming: {stats.upcomingEvents}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 bg-gray-300 rounded mr-2"></div>
+                      <span className="font-handwritten">Past: {stats.totalEvents - stats.upcomingEvents}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-4 border-2 border-dashed border-blue-300 rounded-lg">
+                <h4 className="font-handwritten text-lg mb-3">Attendee Overview</h4>
+                <div className="h-40 flex items-end justify-center space-x-4">
+                  {myEvents.slice(0, 5).map((event, index) => (
+                    <div key={event._id} className="flex flex-col items-center">
+                      <div 
+                        className="w-8 bg-gradient-to-t from-blue-400 to-purple-400 rounded-t transition-all hover:from-blue-500 hover:to-purple-500"
+                        style={{ height: `${Math.min(100, (event.attendees.length / Math.max(1, Math.max(...myEvents.map(e => e.attendees.length))) * 100))}%` }}
+                        title={`${event.title}: ${event.attendees.length} attendees`}
+                      ></div>
+                      <div className="text-xs mt-2 font-handwritten">{event.title.substring(0, 5)}...</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* Custom styles */}
+      <style jsx>{`
+        .bg-grid-pattern {
+          background-image: 
+            linear-gradient(rgba(200, 200, 200, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(200, 200, 200, 0.3) 1px, transparent 1px);
+        }
+        .font-handwritten {
+          font-family: 'Gochi Hand', cursive, 'Comic Sans MS', sans-serif;
+        }
+        .glow-text {
+          text-shadow: 0 0 10px rgba(255, 192, 203, 0.5),
+                       0 0 20px rgba(255, 192, 203, 0.3);
+        }
+        .hover\:glow-pink:hover {
+          box-shadow: 0 0 15px rgba(255, 192, 203, 0.8);
+        }
+      `}</style>
+      
+      {/* Load handwritten font from Google Fonts */}
+      <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap" rel="stylesheet" />
     </div>
   );
 };
 
 export default Dashboard;
+/*2nd*/
